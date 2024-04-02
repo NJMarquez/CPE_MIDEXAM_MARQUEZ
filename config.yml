@@ -1,0 +1,36 @@
+---
+- hosts: all
+  become: true
+  pre_tasks:
+
+  - name: update repository index (CentOS)
+    tags: always
+    dnf:
+      update_cache: yes
+    changed_when: false
+    when: ansible_distribution == "CentOS"
+
+  - name: install updates (Ubuntu)
+    tags: always
+    apt:
+      update_cache: yes
+    changed_when: false
+    when: ansible_distribution == "Ubuntu"
+
+- hosts: CentOSServer
+  become: true
+  roles:
+    - CentOS_ElasticStack
+    - CentOS_Grafana
+    - CentOS_Influx
+    - CentOS_Prometheus
+    - CentOS_LampStack
+
+- hosts: UbuntuServer
+  become: true
+  roles:
+    - Ubuntu_ElasticStack
+    - Ubuntu_Grafana
+    - Ubuntu_Influx
+    - Ubuntu_Prometheus
+    - Ubuntu_LampStack
